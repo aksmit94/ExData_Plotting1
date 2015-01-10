@@ -1,0 +1,11 @@
+data <- read.table("household_power_consumption.txt", sep = ";", header = TRUE, na.string = "?")
+data$Date <- as.Date(data$Date, format = "%d/%m/%Y")
+data$Time <- format(strptime(data$Time, format = "%H:%M:%S"), format = "%H:%M:%S")
+mod_data <- data[data$Date == "2007-02-01" | data$Date == "2007-02-02", ]
+mod_data <- na.omit(mod_data)
+mod_data$DT <- strptime(paste(mod_data$Date, mod_data$Time), format = "%Y-%m-%d %H:%M:%S")
+png(file = "plot2.png")
+par(bg = "transparent")
+with(mod_data, plot(DT, Global_active_power, type = "n", ylab = "Global Active Power (kilowatts)", xlab = ""))
+lines(mod_data$DT, mod_data$Global_active_power, type = "l")
+dev.off()
